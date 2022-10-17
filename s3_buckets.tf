@@ -76,22 +76,22 @@ resource "aws_s3_bucket" "s3_buckets" {
   }
 }
 
-resource "aws_s3_bucket_acl" "example_bucket_acl" {
-  for_each = {
-    for key, value in var.s3_buckets :
-    key => {
-      bucket = aws_s3_bucket.s3_buckets[key].id
-      acl    = try(value.acl, null)
-    }
-  }
+# resource "aws_s3_bucket_acl" "example_bucket_acl" {
+#   for_each = {
+#     for key, value in var.s3_buckets :
+#     key => {
+#       bucket = aws_s3_bucket.s3_buckets[key].id
+#       acl    = try(value.acl, null)
+#     }
+#   }
 
-  bucket = each.value.id
-  acl    = each.value.acl
+#   bucket = each.value.id
+#   acl    = each.value.acl
 
-  depends_on = [
-    aws_s3_bucket.s3_buckets
-  ]
-}
+#   depends_on = [
+#     aws_s3_bucket.s3_buckets
+#   ]
+# }
 
 
 resource "aws_s3_bucket_versioning" "s3_buckets" {
