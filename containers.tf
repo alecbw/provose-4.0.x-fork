@@ -219,7 +219,6 @@ resource "aws_ecs_task_definition" "containers" {
     key => {
       container                = container
       image_name               = container.image.private_registry ? aws_ecr_repository.images[container.image.name].repository_url : container.image.name
-      image_tag                = container.image.private_registry ? data.aws_ecr_image.containers__private[key].id : container.image.tag
       requires_compatibilities = [local.container_compatibility[key]]
       network_mode             = local.network_mode[key]
       task_role_arn            = aws_iam_role.iam__ecs_task_execution_role[key].arn
@@ -251,7 +250,7 @@ resource "aws_ecs_task_definition" "containers" {
       region       = data.aws_region.current.name
       task_name    = each.key
       image_name   = each.value.image_name
-      image_tag    = each.value.image_tag
+      image_tag    = each.value.container.image.tag
       cpu          = each.value.container.instances.cpu
       memory       = each.value.container.instances.memory
       network_mode = each.value.network_mode
