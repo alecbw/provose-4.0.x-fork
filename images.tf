@@ -25,7 +25,16 @@ resource "aws_ecr_repository_policy" "images_ecs" {
   policy = templatefile(
     "${path.module}/templates/ecr_repository_policy.json",
     {
-      principal = each.value.principal
+      principal = jsonencode(concat(
+        [
+          for role in aws_iam_role.iam__ecs_task_execution_role : role.arn
+        ],
+        [
+          for role in aws_iam_role.ec2_on_demand_instances : role.arn
+        ],
+        []
+        )
+      ))
     }
   )
 }
