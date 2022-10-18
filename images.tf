@@ -29,7 +29,7 @@ resource "aws_ecr_repository_policy" "images_ecs" {
     }
   )
 }
-}
+
 #   policy = templatefile(
 #     "${path.module}/templates/ecr_repository_policy.json",
 #     {
@@ -57,7 +57,7 @@ resource "aws_ecr_repository_policy" "images_ecs" {
 #       principal = each.value.principal
 #     }
 #   )
-}
+
 
 
 resource "aws_ecr_repository_policy" "images_ec2_on_demand_instances" {
