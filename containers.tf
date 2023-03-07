@@ -166,7 +166,7 @@ resource "aws_ecs_cluster" "containers" {
   )
   setting {
     name  = "containerInsights"
-    value = "enabled"
+    value = "disabled" # TODO - add for_each support for containers to specify this setting
   }
   tags = {
     Name    = each.key
