@@ -244,6 +244,16 @@ resource "aws_ecs_task_definition" "containers" {
   task_role_arn            = each.value.task_role_arn
   execution_role_arn       = each.value.execution_role_arn
 
+  # Optional Graviton/ARM64 support. Omitting cpu_architecture leaves the AWS default (X86_64),
+  # so every existing container config is unaffected.
+  dynamic "runtime_platform" {
+    for_each = try(each.value.container.instances.cpu_architecture, null) == null ? [] : [1]
+    content {
+      cpu_architecture        = each.value.container.instances.cpu_architecture
+      operating_system_family = "LINUX"
+    }
+  }
+
   container_definitions = templatefile(
     "${path.module}/templates/ecs_container_definition.json",
     {
