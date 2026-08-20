@@ -184,9 +184,12 @@ resource "aws_ecs_cluster" "containers" {
   for_each = var.containers
 
   name = each.key
+
+  # Opt-in per container. Omitting container_insights leaves it disabled,
+  # so every existing container config is unaffected.
   setting {
     name  = "containerInsights"
-    value = "disabled" # TODO - add for_each support for containers to specify this setting
+    value = try(each.value.container_insights, false) ? "enabled" : "disabled"
   }
   tags = {
     Name    = each.key
